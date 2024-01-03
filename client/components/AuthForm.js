@@ -7,6 +7,7 @@ class AuthForm extends React.Component {
 			email: "",
 			password: "",
 		};
+		this.onSubmit = this.onSubmit.bind(this);
 	}
 
 	setEmail(email) {
@@ -17,12 +18,19 @@ class AuthForm extends React.Component {
 		this.setState({ password });
 	}
 
+	onSubmit(event) {
+		event.preventDefault();
+		const { email, password } = this.state;
+		if (typeof this.props.onSubmit === "function") {
+			this.props.onSubmit({ email, password });
+		}
+	}
+
 	render() {
 		return (
 			<div className="row">
-				<form className="col s4">
+				<form onSubmit={this.onSubmit} className="col s4">
 					<div className="input-field">
-						<label>Email</label>
 						<input
 							placeholder="Email"
 							value={this.state.email}
@@ -30,13 +38,17 @@ class AuthForm extends React.Component {
 						/>
 					</div>
 					<div className="input-field">
-						<label>Password</label>
 						<input
 							placeholder="Password"
 							type="password"
 							value={this.state.password}
 							onChange={(e) => this.setPassword(e.target.value)}
 						/>
+					</div>
+					<div className="errors">
+						{this.props.errors.map((error) => (
+							<div key={error}>{error}</div>
+						))}
 					</div>
 					<button className="btn">Submit</button>
 				</form>
